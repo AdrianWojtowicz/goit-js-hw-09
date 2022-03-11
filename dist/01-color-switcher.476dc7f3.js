@@ -118,7 +118,32 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"js/01-color-switcher.js":[function(require,module,exports) {
+var body = document.querySelector('body');
+var buttonStart = document.querySelector('button[data-start]');
+var buttonStop = document.querySelector('button[data-stop]');
 
+function getRandomHexColor() {
+  return "#".concat(Math.floor(Math.random() * 16777215).toString(16));
+}
+
+var timerId = null;
+
+var changeColor = function changeColor() {
+  timerId = setInterval(function () {
+    body.style.backgroundColor = getRandomHexColor();
+  }, 1000);
+  buttonStart.disabled = true;
+  buttonStop.disabled = false;
+};
+
+var stopChangeColor = function stopChangeColor() {
+  clearInterval(timerId);
+  buttonStart.disabled = false;
+  buttonStop.disabled = true;
+};
+
+buttonStart.addEventListener('click', changeColor);
+buttonStop.addEventListener('click', stopChangeColor);
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
