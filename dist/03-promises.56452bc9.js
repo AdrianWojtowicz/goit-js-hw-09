@@ -118,13 +118,47 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"js/03-promises.js":[function(require,module,exports) {
-function createPromise(position, delay) {
-  var shouldResolve = Math.random() > 0.3;
+var inputDelay = document.querySelector('input[name="delay"]');
+var inputStep = document.querySelector('input[name="step"]');
+var inputAmount = document.querySelector('input[name="amount"]');
+var buttonSubmit = document.querySelector('button[type="submit"]');
 
-  if (shouldResolve) {// Fulfill
-  } else {// Reject
-    }
-}
+var runFunction = function runFunction(e) {
+  e.preventDefault();
+  var delayValue = inputDelay.valueAsNumber;
+  var stepValue = inputStep.valueAsNumber;
+  var amountValue = inputAmount.valueAsNumber;
+
+  function createPromise(position, delayValue) {
+    return new Promise(function (resolve, reject) {
+      var shouldResolve = Math.random() > 0.3;
+      setTimeout(function () {
+        if (shouldResolve) {
+          console.log("\u2705 Fulfilled promise ".concat(position, " in ").concat(delayValue, "ms"));
+        } else {
+          console.log("\u274C Rejected promise ".concat(position, " in ").concat(delayValue, "ms"));
+        }
+      }, delayValue);
+    });
+  }
+
+  var _loop = function _loop(i) {
+    var position = i;
+    createPromise(position, delayValue).then(function (value) {
+      console.log("\u2705 Fulfilled promise ".concat(position - 1, " in ").concat(delayValue, "ms"));
+    }).catch(function (err) {
+      console.log("\u274C Rejected promise ".concat(position - 1, " in ").concat(delayValue, "ms"));
+    });
+    delayValue = delayValue + stepValue;
+    position++;
+  };
+
+  for (var i = 1; i <= amountValue; i++) {
+    _loop(i);
+  }
+};
+
+buttonSubmit.addEventListener('click', runFunction);
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
